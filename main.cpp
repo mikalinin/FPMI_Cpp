@@ -2,9 +2,11 @@
 #include "3.String/string.h"
 
 int main() {
-  String a;
-  std::cin >> a;
-  std::cout << a;
+  String a = "qwe";
+  String b = "jnwdkb";
+  if (a < b) {
+    std::cout << "ok";
+  }
 
   return 0;
 }
