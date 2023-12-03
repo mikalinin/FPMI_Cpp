@@ -117,12 +117,15 @@ public:
     string_ = string1;
     return *this;
   }
-
-  size_t find(const String& str) const {
+  size_t Find(const String& str, bool reverse) const {
     if (size_ < str.size_ || str.size_ == 0) {
       return size_;
     }
-    for (size_t i = 0; i < size_ - str.size_; ++i) {
+    ssize_t start = reverse ? size_ - str.size_ : 0;
+    ssize_t end = reverse ? 0 : size_ - str.size_;
+    ssize_t step = reverse ? -1 : 1;
+
+    for (ssize_t i = start; i != end; i += step) {
       size_t j = 0;
       for (j = 0; string_[i + j] == str.string_[j] && j < str.size_; ++j);
       if (j == str.size_) {
@@ -131,19 +134,12 @@ public:
     }
     return size_;
   }
+  size_t find(const String& str) const {
+    return Find(str, false);
+  }
 
   size_t rfind(const String& str) const {
-    if (size_ < str.size_ || str.size_ == 0) {
-      return size_;
-    }
-    for (ssize_t i = size_ - str.size_; i >= 0; --i) {
-      size_t j = 0;
-      for (j = 0; (string_[i + j] == str.string_[j]) && j < str.size_; ++j);
-      if (j == str.size_) {
-        return i;
-      }
-    }
-    return size_;
+    return Find(str, false);
   }
 
   String substr(size_t start, size_t count) const {
