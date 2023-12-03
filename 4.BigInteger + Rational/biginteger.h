@@ -138,7 +138,6 @@ public:
     }
     return str;
   }
-
   explicit operator bool() const {
     return num_.back() == 0;
   }
