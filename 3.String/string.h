@@ -12,6 +12,10 @@ public:
     string_[0] = '\0';
   }
 
+  String(int size, int capacity, char* string) : size_(size), capacity_(capacity), string_(string) {
+    string_[size_ + 1] = '\0';
+  }
+
   String(const String& str) : size_(str.size_), capacity_(str.capacity_), string_(new char[capacity_]) {
     std::copy(str.string_, str.string_ + size_ + 1, string_);
   }
@@ -139,17 +143,16 @@ public:
   }
 
   size_t rfind(const String& str) const {
-    return Find(str, false);
+    return Find(str, true);
   }
 
   String substr(size_t start, size_t count) const {
-    String new_str;
-    new_str.size_ = count;
-    new_str.capacity_ = count + 1;
-    new_str.string_ = new char[count + 1];
-    memcpy(new_str.string_, string_ + start, count);
-    new_str.string_[count] = '\0';
-    return new_str;
+    int size = count;
+    int capacity = count + 1;
+    char* string = new char[count + 1];
+    memcpy(string, string_ + start, count);
+    string_[count] = '\0';
+    return String(size, capacity, string);
   }
 
   bool empty() const {

@@ -142,9 +142,7 @@ class Circle : public Ellipse {
 class Rectangle : public Polygon {
   Rectangle(const Point& point1, const Point& point2, double k) : Polygon{point1, Point(0, 0), point2, Point(0, 0)} {
 
-    double angle = 180 - 2 * atan(k) * 180 / PI;
-    Point middle = middle_point(point1, point2);
-    vertices[1] = point1.rotate(middle, angle);
-    vertices[3] = point2.rotate(middle, angle);
   }
 };
+
+
