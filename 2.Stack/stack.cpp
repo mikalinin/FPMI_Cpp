@@ -5,12 +5,17 @@ char* in() {
   char* str = new char;
   int symbol;
   int len = 0;
+  int str_capacity = 2;
   symbol = getchar();
   while (!isspace(symbol)) {
-    char* str1 = new char[len + 1];
-    memcpy(str1, str, len);
-    str1[len] = static_cast<char>(symbol);
-    str = str1;
+    if (len + 1 >= str_capacity) {
+      str_capacity *= 2;
+      char* str1 = new char[str_capacity];
+      memcpy(str1, str, len);
+      delete str;
+      str = str1;
+    }
+    str[len] = static_cast<char>(symbol);
     ++len;
     symbol = getchar();
   }
@@ -18,15 +23,18 @@ char* in() {
   return str;
 }
 
-void push(char* elem, char**& stack, int& size) {
-  char** new_stack = new char* [size + 1];
-  for (int i = 0; i < size; ++i) {
-    new_stack[i] = stack[i];
+void push(char* elem, char**& stack, int& size, int& capacity) {
+  if (size + 1 >= capacity) {
+    capacity *= 2;
+    char** new_stack = new char* [capacity];
+    for (int i = 0; i < size; ++i) {
+      new_stack[i] = stack[i];
+    }
+    delete[] stack;
+    stack = new_stack;
   }
-  new_stack[size] = elem;
+  stack[size] = elem;
   ++size;
-  delete[] stack;
-  stack = new_stack;
 }
 
 const char* pop(char**& stack, int& size) {
@@ -61,12 +69,14 @@ void clear(char**& stack, int& size) {
 
 int main() {
   int size = 0;
+  int capacity = 2;
   char** stack = new char* [0];
   while(true){
     char* query = in();
     if (strcmp(query, "push") == 0) {
       char* str = in();
-      push(str, stack, size);
+      push(str, stack, size, capacity);
+      delete str;
       std::cout << "ok" << '\n';
       continue;
     }
@@ -88,10 +98,14 @@ int main() {
       continue;
     }
     if(strcmp(query, "exit") == 0) {
+      for (int i = 0; i < size; ++i) {
+        delete stack[i];
+      }
       delete[] stack;
       std::cout << "bye";
       break;
     }
+    delete query;
   }
   return 0;
 }
