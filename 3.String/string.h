@@ -7,6 +7,25 @@ private:
   size_t size_;
   size_t capacity_;
   char* string_;
+
+  size_t unified_find(const String& str, bool reverse) const {
+    if (size_ < str.size_ || str.size_ == 0) {
+      return size_;
+    }
+    ssize_t start = reverse ? size_ - str.size_ : 0;
+    ssize_t end = reverse ? -1 : size_ - str.size_;
+    ssize_t step = reverse ? -1 : 1;
+
+    for (ssize_t i = start; i != end; i += step) {
+      size_t j = 0;
+      for (j = 0; string_[i + j] == str.string_[j] && j < str.size_; ++j);
+      if (j == str.size_) {
+        return i;
+      }
+    }
+    return size_;
+  }
+
 public:
   String() : size_(0), capacity_(2), string_(new char[capacity_]) {
     string_[0] = '\0';
@@ -76,11 +95,11 @@ public:
       ++size_;
       delete[] string_;
       string_ = string1;
-    } else {
-      string_[size_] = ch;
-      string_[size_ + 1] = '\0';
-      ++size_;
+      return;
     }
+    string_[size_] = ch;
+    string_[size_ + 1] = '\0';
+    ++size_;
   }
 
   void pop_back() {
@@ -121,29 +140,13 @@ public:
     string_ = string1;
     return *this;
   }
-  size_t Find(const String& str, bool reverse) const {
-    if (size_ < str.size_ || str.size_ == 0) {
-      return size_;
-    }
-    ssize_t start = reverse ? size_ - str.size_ : 0;
-    ssize_t end = reverse ? 0 : size_ - str.size_;
-    ssize_t step = reverse ? -1 : 1;
 
-    for (ssize_t i = start; i != end; i += step) {
-      size_t j = 0;
-      for (j = 0; string_[i + j] == str.string_[j] && j < str.size_; ++j);
-      if (j == str.size_) {
-        return i;
-      }
-    }
-    return size_;
-  }
   size_t find(const String& str) const {
-    return Find(str, false);
+    return unified_find(str, false);
   }
 
   size_t rfind(const String& str) const {
-    return Find(str, true);
+    return unified_find(str, true);
   }
 
   String substr(size_t start, size_t count) const {
@@ -151,7 +154,6 @@ public:
     int capacity = count + 1;
     char* string = new char[count + 1];
     memcpy(string, string_ + start, count);
-    string_[count] = '\0';
     return String(size, capacity, string);
   }
 
@@ -160,7 +162,6 @@ public:
   }
 
   void clear() {
-    capacity_ = 2;
     size_ = 0;
     string_[0] = '\0';
   }
@@ -221,17 +222,15 @@ bool operator!=(const String& str1, const String& str2) {
 }
 
 bool operator<(const String& str1, const String& str2) {
-  if (str1.size() < str2.size()) return true;
-  if (str1.size() > str2.size()) return true;
   return strcmp(str1.data(), str2.data()) < 0;
 }
 
-bool operator<=(const String& str1, const String& str2) {
-  return (str1 < str2 || str1 == str2);
+bool operator>(const String& str1, const String& str2) {
+  return (str2 < str1);
 }
 
-bool operator>(const String& str1, const String& str2) {
-  return !(str1 <= str2);
+bool operator<=(const String& str1, const String& str2) {
+  return !(str1 > str2);
 }
 
 bool operator>=(const String& str1, const String& str2) {
