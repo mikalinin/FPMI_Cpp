@@ -7,6 +7,8 @@
 
 class Line;
 
+bool isEqualZero(double number) { return std::abs(number) < 1e-6; }
+
 struct Point {
   double x;
   double y;
@@ -33,6 +35,9 @@ struct Point {
     x = (x - center.x) * coefficient + center.x;
     y = (y - center.y) * coefficient + center.y;
   }
+
+  double mod() { return sqrt(x * x + y * y); }
+
 };
 
 bool operator==(const Point& point1, const Point& point2) {
@@ -50,6 +55,15 @@ double points_distance(const Point& point1, const Point& point2) {
 Point middle_point(const Point& point1, const Point& point2) {
   return Point((point1.x + point2.x) / 2, (point1.y + point2.y) / 2);
 }
+
+Point operator-(Point A, Point B) { return Point(A.x - B.x, A.y - B.y); }
+
+double scalar(const Point& A, const Point& B) { return A.x * B.x + A.y * B.y; }
+
+double dist(const Point& A, const Point& B) { return sqrt(scalar(A - B, A - B)); }
+
+Point operator+(Point A, Point B) { return Point(A.x + B.x, A.y + B.y); }
+Point operator*(long double d, Point A) { return Point(A.x * d, A.y * d); }
 
 
 class Line {
@@ -114,6 +128,16 @@ public:
 
   Vector(const Point& a, const Point& b) : x(a.x - b.x), y(a.y - b.y) {}
 
+  double length() const {
+    return std::sqrt(x * x + y * y);
+  }
+
+  Vector& normalize() {
+    double len = length();
+    x /= len;
+    y /= len;
+    return *this;
+  }
 };
 
 double ScalarProduct(const Vector& vec1, const Vector& vec2) {
@@ -123,6 +147,15 @@ double ScalarProduct(const Vector& vec1, const Vector& vec2) {
 double VectorMultiply(const Vector& vec1, const Vector& vec2) {
   return vec1.x * vec2.y - vec2.x * vec1.y;
 }
+
+double operator*(const Vector& a, const Vector& b) {
+  return a.x * b.x + a.y * b.y;
+}
+
+double operator^(const Vector& a, const Vector& b) {
+  return a.x * b.y - a.y * b.x;
+}
+
 
 class Shape {
 public:
@@ -180,24 +213,26 @@ public:
 
   Polygon(std::vector<Point>& vertices) : vertices_(vertices) {}
 
-  template<class... Types>
-  Polygon(Types... args) {
-
-  }
+  template<typename... T>
+  explicit Polygon(T &&... vertices) : vertices_{std::forward<T>(vertices)...} {}
 
   int verticesCount() const { return static_cast<int>(vertices_.size()); };
 
   std::vector<Point> getVertices() { return vertices_; };
 
   bool isConvex() {
+    bool lessZero = false;
+    bool grZero = false;
     for (int i = 0; i < verticesCount(); ++i) {
-      Vector vec1 = Vector(vertices_[i], vertices_[(i + 1) % verticesCount()]);
-      Vector vec2 = Vector(vertices_[(i + 1) % verticesCount()], vertices_[(i + 2) % verticesCount()]);
-      if (ScalarProduct(vec1, vec2) < 0) {
-        return false;
+      int ind1 = (i + 1) % verticesCount();
+      int ind2 = (i + 2) % verticesCount();
+      if (VectorMultiply(Vector(vertices_[ind1] , vertices_[i]), Vector(vertices_[ind2] , vertices_[ind1])) < 0) {
+        lessZero = true;
+      } else {
+        grZero = true;
       }
     }
-    return true;
+    return lessZero ^ grZero;
   }
 
   double perimeter() const override {
@@ -253,15 +288,36 @@ public:
     return !(*this == another);
   }
 
+  bool similarityChecker(const Polygon* p, bool orientation, int start, double k) const {
+    int n = verticesCount();
+    for (int i = 0; i < n; ++i) {
+      Point A1 = vertices_[(n + i - 1) % n], B1 = vertices_[i], C1 = vertices_[(i + 1) % n];
+      Point A2 = p->vertices_[(orientation ? n + i - 1 + start : n - 1 - (i - 1) + n + start) % n],
+        B2 = p->vertices_[(orientation ? i + start : n - 1 - i + start + n) % n],
+        C2 = p->vertices_[(orientation ? i + 1 + start : n - 1 - (i + 1) + start + n) % n];
+      Point B1A1 = A1 - B1, B1C1 = C1 - B1;
+      Point B2A2 = A2 - B2, B2C2 = C2 - B2;
+      if (!isEqualZero(dist(B1, A1) - k * dist(B2, A2)) ||
+          !isEqualZero(scalar(B1A1, B1C1) / (B1A1.mod() * B1C1.mod()) - scalar(B2A2, B2C2) / (B2A2.mod() * B2C2.mod()))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   bool isSimilarTo(const Shape& another) const override {
-    auto ptr = dynamic_cast<const Polygon*>(&another);
-    if (!ptr) return false;
-    double k = perimeter() / ptr->perimeter();
-    return area() / ptr->area() == k * k;
+    const auto polygon_ptr = dynamic_cast<const Polygon*>(&another);
+    if (polygon_ptr == nullptr) { return false; }
+    if (verticesCount() != polygon_ptr->verticesCount()) { return false; }
+    long double k = perimeter() / polygon_ptr->perimeter();
+    for (int start = 0; start < verticesCount(); ++start) {
+      if (similarityChecker(polygon_ptr, true, start, k) || similarityChecker(polygon_ptr, false, start, k)) { return true; }
+    }
+    return false;
   }
 
   bool isCongruentTo(const Shape& another) const override {
-    return this->isSimilarTo(another) && this->area() == another.area();
+    return isSimilarTo(another) && (another.area() - this->area() < 1e-6);
   }
 
   bool containsPoint(Point point) const override {
@@ -318,16 +374,13 @@ class Ellipse : public Shape {
   // x^2/a^2 + y^2/b^2 = 1;
 protected:
   double a = 0.0;
+  double c = 0.0;
   double b = 0.0;
   std::pair<Point, Point> focus = std::pair(Point(0, 0), Point(0, 0));
 public:
   Ellipse() = default;
 
-  Ellipse(const Point& point1, const Point& point2, double dist) {
-    focus = std::make_pair(point1, point2);
-    a = dist / 2;
-    b = pow((a * a - (points_distance(point1, point2) / 2) * (points_distance(point1, point2) / 2)), 0.5);
-  }
+  Ellipse(const Point& point1, const Point& point2, double distance) : a(distance / 2), c(dist(point1, point2) / 2), b(std::sqrt(a * a - c * c) ), focus(std::make_pair(point1, point2))  {}
 
   std::pair<Point, Point> focuses() const { return focus; }
 
@@ -337,7 +390,7 @@ public:
     return std::make_pair(line1, line2);
   }
 
-  double eccentricity() const { return sqrt(1 - (b * b / a * a)); }
+  double eccentricity() const { return c/a; }
 
   Point center() const {
     return Point((focus.first.x + focus.second.x) / 2, (focus.first.y + focus.second.y) / 2);
@@ -474,24 +527,32 @@ public:
   Point centroid() const {
     double x = (vertices_[0].x + vertices_[1].x + vertices_[2].x) / 3;
     double y = (vertices_[0].y + vertices_[1].y + vertices_[2].y) / 3;
+    std::cerr << "centroid" << "\n";
+    std::cerr << x << " " << y << "\n";
     return Point(x, y);
+
   }
 
   Point orthocenter() const {
-    Line ha = perpendicular(Line(vertices_[0], vertices_[1]));
-    ha.c = -ha.a * vertices_[2].x - ha.b * vertices_[2].y;
-    Line hb = perpendicular(Line(vertices_[1], vertices_[2]));
-    hb.c = -hb.a * vertices_[0].x - hb.b * vertices_[0].y;
-    return cross(ha, hb);
+    Point O = circumscribedCircle().center();
+    Point M = centroid();
+    return M + 2 * (O - M);
   }
 
   Line EulerLine() const {
-    return Line(circumscribedCircle().center(), orthocenter());
+    Point O = ninePointsCircle().center();
+    Point M = centroid();
+    return Line(O, M);
   }
 
   Circle ninePointsCircle() const {
-    Point center = middle_point(circumscribedCircle().center(), orthocenter());
-    return Circle(center, circumscribedCircle().radius() / 2);
+    Point A = vertices_[0];
+    Point O = circumscribedCircle().center();
+    Point H = orthocenter();
+    Point E = 0.5 * (O + H);
+    std::cerr << "nineCenter" << "\n";
+    std::cerr << E.x << " " << E.y << "\n";
+    return Circle(E, 0.5 * dist(O, A));
   }
 };
 
