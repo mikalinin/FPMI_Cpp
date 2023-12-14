@@ -56,14 +56,15 @@ Point middle_point(const Point& point1, const Point& point2) {
   return Point((point1.x + point2.x) / 2, (point1.y + point2.y) / 2);
 }
 
-Point operator-(Point A, Point B) { return Point(A.x - B.x, A.y - B.y); }
+Point operator-(const Point& point1, const Point& point2) { return Point(point1.x - point2.x, point1.y - point2.y); }
 
-double scalar(const Point& A, const Point& B) { return A.x * B.x + A.y * B.y; }
+double scalar(const Point& point1, const Point& point2) { return point1.x * point2.x + point1.y * point2.y; }
 
-double dist(const Point& A, const Point& B) { return sqrt(scalar(A - B, A - B)); }
+double dist(const Point& point1, const Point& point2) { return sqrt(scalar(point1 - point2, point1 - point2)); }
 
-Point operator+(Point A, Point B) { return Point(A.x + B.x, A.y + B.y); }
-Point operator*(long double d, Point A) { return Point(A.x * d, A.y * d); }
+Point operator+(const Point& point1, const Point& point2) { return Point(point1.x + point2.x, point1.y + point2.y); }
+
+Point operator*(double d, const Point& point) { return Point(point.x * d, point.y * d); }
 
 
 class Line {
@@ -132,28 +133,16 @@ public:
     return std::sqrt(x * x + y * y);
   }
 
-  Vector& normalize() {
-    double len = length();
-    x /= len;
-    y /= len;
-    return *this;
-  }
 };
 
-double ScalarProduct(const Vector& vec1, const Vector& vec2) {
+//ScalarProduct
+double operator*(const Vector& vec1, const Vector& vec2) {
   return vec1.x * vec2.x + vec1.y * vec2.y;
 }
 
-double VectorMultiply(const Vector& vec1, const Vector& vec2) {
-  return vec1.x * vec2.y - vec2.x * vec1.y;
-}
-
-double operator*(const Vector& a, const Vector& b) {
-  return a.x * b.x + a.y * b.y;
-}
-
-double operator^(const Vector& a, const Vector& b) {
-  return a.x * b.y - a.y * b.x;
+//VectorProduct
+double operator^(const Vector& vec1, const Vector& vec2) {
+  return vec1.x * vec2.y - vec1.y * vec2.x;
 }
 
 
@@ -190,18 +179,21 @@ class Segment {
 public:
   Point p1;
   Point p2;
+
   Segment() = default;
 
   Segment(double x1, double y1, double x2, double y2) {
     p1 = Point(x1, y1);
     p2 = Point(x2, y2);
   }
-  Segment(const Point &p1, const Point &p2) : p1(p1), p2(p2) {}
+
+  Segment(const Point& p1, const Point& p2) : p1(p1), p2(p2) {}
+
   bool ContainsPoint(const Point& point) const {
     Vector point_to_first(p1, point);
     Vector point_to_second(p2, point);
-    return (VectorMultiply(point_to_first, point_to_second) == 0
-            && ScalarProduct(point_to_first, point_to_second) <= 0);
+    return ((point_to_first ^ point_to_second) == 0
+            && (point_to_first * point_to_second) <= 0);
   }
 };
 
@@ -214,7 +206,7 @@ public:
   Polygon(std::vector<Point>& vertices) : vertices_(vertices) {}
 
   template<typename... T>
-  explicit Polygon(T &&... vertices) : vertices_{std::forward<T>(vertices)...} {}
+  explicit Polygon(T&& ... vertices) : vertices_{std::forward<T>(vertices)...} {}
 
   int verticesCount() const { return static_cast<int>(vertices_.size()); };
 
@@ -222,33 +214,31 @@ public:
 
   bool isConvex() {
     bool lessZero = false;
-    bool grZero = false;
+    bool aboveZero = false;
     for (int i = 0; i < verticesCount(); ++i) {
       int ind1 = (i + 1) % verticesCount();
       int ind2 = (i + 2) % verticesCount();
-      if (VectorMultiply(Vector(vertices_[ind1] , vertices_[i]), Vector(vertices_[ind2] , vertices_[ind1])) < 0) {
+      if ((Vector(vertices_[ind1], vertices_[i]) ^ Vector(vertices_[ind2], vertices_[ind1])) < 0) {
         lessZero = true;
       } else {
-        grZero = true;
+        aboveZero = true;
       }
     }
-    return lessZero ^ grZero;
+    return lessZero ^ aboveZero;
   }
 
   double perimeter() const override {
     double perimeter = 0;
-    int size = verticesCount();
-    for (int i = 0; i < size; ++i) {
-      perimeter += points_distance(vertices_[i], vertices_[(i + 1) % size]);
+    for (int i = 0; i < verticesCount(); ++i) {
+      perimeter += points_distance(vertices_[i], vertices_[(i + 1) % verticesCount()]);
     }
     return perimeter;
   }
 
   double area() const override {
     double area = 0;
-    int size = verticesCount();
-    for (int i = 0; i < size; ++i) {
-      area += vertices_[i].x * vertices_[(i + 1) % size].y - vertices_[i].y * vertices_[(i + 1) % size].x;
+    for (int i = 0; i < verticesCount(); ++i) {
+      area += vertices_[i].x * vertices_[(i + 1) % verticesCount()].y - vertices_[i].y * vertices_[(i + 1) % verticesCount()].x;
     }
     return std::abs(area / 2);
   }
@@ -289,16 +279,17 @@ public:
   }
 
   bool similarityChecker(const Polygon* p, bool orientation, int start, double k) const {
-    int n = verticesCount();
-    for (int i = 0; i < n; ++i) {
-      Point A1 = vertices_[(n + i - 1) % n], B1 = vertices_[i], C1 = vertices_[(i + 1) % n];
-      Point A2 = p->vertices_[(orientation ? n + i - 1 + start : n - 1 - (i - 1) + n + start) % n],
-        B2 = p->vertices_[(orientation ? i + start : n - 1 - i + start + n) % n],
-        C2 = p->vertices_[(orientation ? i + 1 + start : n - 1 - (i + 1) + start + n) % n];
+    int size = verticesCount();
+    for (int i = 0; i < size; ++i) {
+      Point A1 = vertices_[(size + i - 1) % size], B1 = vertices_[i], C1 = vertices_[(i + 1) % size];
+      Point A2 = p->vertices_[(orientation ? size + i - 1 + start : size - 1 - (i - 1) + size + start) % size],
+        B2 = p->vertices_[(orientation ? i + start : size - 1 - i + start + size) % size],
+        C2 = p->vertices_[(orientation ? i + 1 + start : size - 1 - (i + 1) + start + size) % size];
       Point B1A1 = A1 - B1, B1C1 = C1 - B1;
       Point B2A2 = A2 - B2, B2C2 = C2 - B2;
       if (!isEqualZero(dist(B1, A1) - k * dist(B2, A2)) ||
-          !isEqualZero(scalar(B1A1, B1C1) / (B1A1.mod() * B1C1.mod()) - scalar(B2A2, B2C2) / (B2A2.mod() * B2C2.mod()))) {
+          !isEqualZero(
+            scalar(B1A1, B1C1) / (B1A1.mod() * B1C1.mod()) - scalar(B2A2, B2C2) / (B2A2.mod() * B2C2.mod()))) {
         return false;
       }
     }
@@ -309,9 +300,10 @@ public:
     const auto polygon_ptr = dynamic_cast<const Polygon*>(&another);
     if (polygon_ptr == nullptr) { return false; }
     if (verticesCount() != polygon_ptr->verticesCount()) { return false; }
-    long double k = perimeter() / polygon_ptr->perimeter();
+    long double coeff = perimeter() / polygon_ptr->perimeter();
     for (int start = 0; start < verticesCount(); ++start) {
-      if (similarityChecker(polygon_ptr, true, start, k) || similarityChecker(polygon_ptr, false, start, k)) { return true; }
+      if (similarityChecker(polygon_ptr, true, start, coeff) ||
+          similarityChecker(polygon_ptr, false, start, coeff)) { return true; }
     }
     return false;
   }
@@ -330,13 +322,13 @@ public:
     bool is_inside = false;
     int j = verticesCount() - 1;
     for (int i = 0; i < verticesCount(); ++i) {
-      // false if there is an even number of sides of poly on the left and true with an odd one.
-      bool one_direction = vertices_[i].y < point.y && vertices_[j].y >= point.y;
-      bool other_direction = vertices_[j].y < point.y && vertices_[i].y >= point.y;
-      if (one_direction || other_direction) {
-        double ray_poly_cross_x = vertices_[i].x + (point.y - vertices_[i].y) /
-                                                   (vertices_[j].y - vertices_[i].y) * (vertices_[j].x - vertices_[i].x);
-        if (ray_poly_cross_x < point.x) {
+      bool is_one = vertices_[i].y < point.y && vertices_[j].y >= point.y;
+      bool is_other = vertices_[j].y < point.y && vertices_[i].y >= point.y;
+      if (is_one || is_other) {
+        double k = vertices_[i].x + (point.y - vertices_[i].y) /
+                                    (vertices_[j].y - vertices_[i].y) *
+                                    (vertices_[j].x - vertices_[i].x);
+        if (k < point.x) {
           is_inside = !is_inside;
         }
       }
@@ -380,7 +372,9 @@ protected:
 public:
   Ellipse() = default;
 
-  Ellipse(const Point& point1, const Point& point2, double distance) : a(distance / 2), c(dist(point1, point2) / 2), b(std::sqrt(a * a - c * c) ), focus(std::make_pair(point1, point2))  {}
+  Ellipse(const Point& point1, const Point& point2, double distance) : a(distance / 2), c(dist(point1, point2) / 2),
+                                                                       b(std::sqrt(a * a - c * c)),
+                                                                       focus(std::make_pair(point1, point2)) {}
 
   std::pair<Point, Point> focuses() const { return focus; }
 
@@ -390,7 +384,7 @@ public:
     return std::make_pair(line1, line2);
   }
 
-  double eccentricity() const { return c/a; }
+  double eccentricity() const { return c / a; }
 
   Point center() const {
     return Point((focus.first.x + focus.second.x) / 2, (focus.first.y + focus.second.y) / 2);
@@ -527,16 +521,14 @@ public:
   Point centroid() const {
     double x = (vertices_[0].x + vertices_[1].x + vertices_[2].x) / 3;
     double y = (vertices_[0].y + vertices_[1].y + vertices_[2].y) / 3;
-    std::cerr << "centroid" << "\n";
-    std::cerr << x << " " << y << "\n";
     return Point(x, y);
 
   }
 
   Point orthocenter() const {
-    Point O = circumscribedCircle().center();
+    Point O1 = circumscribedCircle().center();
     Point M = centroid();
-    return M + 2 * (O - M);
+    return M + 2 * (O1 - M);
   }
 
   Line EulerLine() const {
@@ -550,8 +542,6 @@ public:
     Point O = circumscribedCircle().center();
     Point H = orthocenter();
     Point E = 0.5 * (O + H);
-    std::cerr << "nineCenter" << "\n";
-    std::cerr << E.x << " " << E.y << "\n";
     return Circle(E, 0.5 * dist(O, A));
   }
 };
