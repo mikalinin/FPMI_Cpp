@@ -63,6 +63,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "preferences.sourceCode.C/C++",
+    "structure.view.defaults.are.configured": "true",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -87,7 +88,7 @@
       <workItem from="1701621594854" duration="5062000" />
       <workItem from="1701633593029" duration="7988000" />
       <workItem from="1702315101209" duration="12314000" />
-      <workItem from="1702403298164" duration="26530000" />
+      <workItem from="1702403298164" duration="26908000" />
     </task>
     <task id="LOCAL-00001" summary="Nothing new">
       <option name="closed" value="true" />
