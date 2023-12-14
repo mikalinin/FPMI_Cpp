@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f0c85369-a3e8-4926-887d-746f481278c1" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;mikalinin&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="01a9a09b-a2e7-45d5-b6cb-030af2e21993" />
+        <option name="url" value="https://github.com/mikalinin/FPMI_Cpp" />
+      </UrlAndAccount>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="2YSWOFzu9Yyc6KXFJp65hKLOPgT" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/Users/ASUS/CLionProjects/FPMI_Cpp/2.Stack/stack.cpp",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.sourceCode.C/C++",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="stack.cpp" type="CppFileRunConfiguration" factoryName="CppFileRunConfiguration" nameIsGenerated="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="FPMI_Cpp" TARGET_NAME="stack.cpp" CONFIG_NAME="stack.cpp">
+      <option name="sourceFile" value="C:\Users\ASUS\CLionProjects\FPMI_Cpp\2.Stack\stack.cpp" />
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.runfile.CppFileBuildBeforeRunTaskProvider$BasicBuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f0c85369-a3e8-4926-887d-746f481278c1" name="Changes" comment="" />
+      <created>1700519426382</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1700519426382</updated>
+      <workItem from="1700519427423" duration="2772000" />
+      <workItem from="1700585017821" duration="247000" />
+      <workItem from="1701621594854" duration="5062000" />
+      <workItem from="1701633593029" duration="7988000" />
+      <workItem from="1702315101209" duration="12314000" />
+      <workItem from="1702403298164" duration="26530000" />
+    </task>
+    <task id="LOCAL-00001" summary="Nothing new">
+      <option name="closed" value="true" />
+      <created>1701621628547</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1701621628547</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Start geometry.h">
+      <option name="closed" value="true" />
+      <created>1701629219402</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1701629219402</updated>
+    </task>
+    <task id="LOCAL-00003" summary="2 geometry.h">
+      <option name="closed" value="true" />
+      <created>1701637954237</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1701637954237</updated>
+    </task>
+    <task id="LOCAL-00004" summary="find in string">
+      <option name="closed" value="true" />
+      <created>1701638423617</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1701638423617</updated>
+    </task>
+    <task id="LOCAL-00005" summary="substr ub fix">
+      <option name="closed" value="true" />
+      <created>1701639432438</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1701639432438</updated>
+    </task>
+    <task id="LOCAL-00006" summary="String review 3">
+      <option name="closed" value="true" />
+      <created>1702392879184</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1702392879184</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Still Memory Leak...">
+      <option name="closed" value="true" />
+      <created>1702394520692</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1702394520692</updated>
+    </task>
+    <task id="LOCAL-00008" summary="More geometry!!!">
+      <option name="closed" value="true" />
+      <created>1702403196223</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1702403196223</updated>
+    </task>
+    <task id="LOCAL-00009" summary="More geometry!!!">
+      <option name="closed" value="true" />
+      <created>1702491630253</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1702491630253</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Zashlo?">
+      <option name="closed" value="true" />
+      <created>1702592044362</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1702592044362</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Refactor">
+      <option name="closed" value="true" />
+      <created>1702593013205</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1702593013205</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Nothing new" />
+    <MESSAGE value="Start geometry.h" />
+    <MESSAGE value="2 geometry.h" />
+    <MESSAGE value="find in string" />
+    <MESSAGE value="substr ub fix" />
+    <MESSAGE value="String review 3" />
+    <MESSAGE value="Still Memory Leak..." />
+    <MESSAGE value="More geometry!!!" />
+    <MESSAGE value="Zashlo?" />
+    <MESSAGE value="Refactor" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/5.Geometry/geometry.h</url>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
