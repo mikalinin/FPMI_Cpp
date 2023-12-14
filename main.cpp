@@ -1,9 +1,7 @@
 #include <iostream>
-#include "3.String/string.h"
+#include "5.Geometry/geometry.h"
 
 int main() {
-  String a = "abbbc";
-  std::cout << a.rfind("c");
-
+  Ellipse a = Ellipse(Point(0,0), Point(1,1), 3);
   return 0;
 }

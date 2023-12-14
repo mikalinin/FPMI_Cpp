@@ -27,9 +27,10 @@ void push(char* elem, char**& stack, int& size, int& capacity) {
   if (size + 1 >= capacity) {
     capacity *= 2;
     char** new_stack = new char* [capacity];
-    for (int i = 0; i < size; ++i) {
-      new_stack[i] = stack[i];
+    for (int i = 0; i <= size; ++i) {
+      new_stack[i] = new char;
     }
+    memcpy(new_stack, stack, size);
     delete[] stack;
     stack = new_stack;
   }
