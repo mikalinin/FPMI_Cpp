@@ -208,6 +208,9 @@ public:
   template<typename... T>
   explicit Polygon(T&& ... vertices) : vertices_{std::forward<T>(vertices)...} {}
 
+  Polygon(std::initializer_list<Point> vec) : vertices_(vec) {}
+
+
   int verticesCount() const { return static_cast<int>(vertices_.size()); };
 
   std::vector<Point> getVertices() { return vertices_; };
