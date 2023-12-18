@@ -32,7 +32,7 @@ public:
   }
 
   String(int size, int capacity, char* string) : size_(size), capacity_(capacity), string_(string) {
-    string_[size_ + 1] = '\0';
+    string_[size_] = '\0';
   }
 
   String(const String& str) : size_(str.size_), capacity_(str.capacity_), string_(new char[capacity_]) {
@@ -226,7 +226,7 @@ bool operator<(const String& str1, const String& str2) {
 }
 
 bool operator>(const String& str1, const String& str2) {
-  return (str2 < str1);
+  return str2 < str1;
 }
 
 bool operator<=(const String& str1, const String& str2) {
